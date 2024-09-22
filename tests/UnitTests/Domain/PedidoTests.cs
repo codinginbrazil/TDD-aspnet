@@ -18,4 +18,25 @@ public class PedidoTests
         // Assert
         Assert.Equal(expected: 200, actual: pedido.ValorTotal);
     }
+
+    [Fact(DisplayName = "Adicionar Item Pedido Existente")]
+    [Trait("categoria", "Pedido Tests")]
+    public void AdicionarItemPedido_ItemExistente_DeveIncrementarUnidadesSomarValorres()
+    {
+        // Arrange
+        var pedido = new Pedido();
+        var produtoId = Guid.NewGuid();
+        var pedidoItem = new PedidoItem(produtoId, nome: "Produto Teste", quantidade: 2, valorUnitario: 100);
+        pedido.AdicionarItem(pedidoItem);
+
+        var pedidoItem2 = new PedidoItem(produtoId, nome: "Produto Teste", quantidade: 1, valorUnitario: 100);
+
+        // Act
+        pedido.AdicionarItem(pedidoItem2);
+        
+        //Assert
+        Assert.Equal(expected: 300, actual: pedido.ValorTotal);
+        Assert.Equal(expected: 1, actual: pedido.PedidoItens.Count);
+        Assert.Equal(expected: 3, actual: pedido.PedidoItens.FirstOrDefault(x => x.Id == produtoId).Quantidade);
+    }
 }
