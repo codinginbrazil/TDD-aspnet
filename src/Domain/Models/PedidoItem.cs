@@ -1,11 +1,11 @@
 ﻿namespace Domain.Models;
 
-public class PedidoItem
+public sealed class PedidoItem
 {
-    public Guid Id;
-    public string Nome;
-    public int Quantidade;
-    public decimal ValorUnitario;
+    public Guid Id { get; private set; }
+    public string Nome { get; private set; }
+    public int Quantidade { get; private set; }
+    public decimal ValorUnitario { get; private set; }
 
     public PedidoItem(Guid id, string nome, int quantidade, decimal valorUnitario)
     {

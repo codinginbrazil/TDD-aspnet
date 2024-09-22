@@ -1,11 +1,16 @@
 ﻿namespace Domain.Models;
 
-public class Pedido
+public sealed class Pedido
 {
-    public decimal ValorTotal { get; private set; } 
+    private readonly List<PedidoItem> _pedidoItens;
+    public IReadOnlyCollection<PedidoItem> PedidoItens => _pedidoItens.AsReadOnly();
+    public decimal ValorTotal { get; private set; }
+
+    public Pedido() => _pedidoItens = [];
 
     public void AdicionarItem(PedidoItem item)
     {
-        ValorTotal = item.ValorUnitario * item.Quantidade;
+        _pedidoItens.Add(item);
+        ValorTotal = PedidoItens.Sum(i => i.ValorUnitario * i.Quantidade);
     }
 }
