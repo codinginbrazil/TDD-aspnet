@@ -9,7 +9,7 @@ public class PedidoTests
     public void Trocar_Nome_Metodo()
     {
         // Arrange
-        var pedido = new Pedido();
+        var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(clienteId: Guid.NewGuid());
         var pedidoItem = new PedidoItem(new Guid(), "Produto Teste", 2, 100);
 
         // Act
@@ -24,7 +24,7 @@ public class PedidoTests
     public void AdicionarItemPedido_ItemExistente_DeveIncrementarUnidadesSomarValorres()
     {
         // Arrange
-        var pedido = new Pedido();
+        var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(clienteId: Guid.NewGuid());
         var produtoId = Guid.NewGuid();
         var pedidoItem = new PedidoItem(produtoId, nome: "Produto Teste", quantidade: 2, valorUnitario: 100);
         pedido.AdicionarItem(pedidoItem);
@@ -33,7 +33,7 @@ public class PedidoTests
 
         // Act
         pedido.AdicionarItem(pedidoItem2);
-        
+
         //Assert
         Assert.Equal(expected: 300, actual: pedido.ValorTotal);
         Assert.Equal(expected: 1, actual: pedido.PedidoItens.Count);

@@ -1,12 +1,17 @@
-﻿namespace Domain.Models;
+﻿using Domain.Statics;
+
+namespace Domain.Models;
 
 public sealed class Pedido
 {
     private readonly List<PedidoItem> _pedidoItens;
+    
     public IReadOnlyCollection<PedidoItem> PedidoItens => _pedidoItens.AsReadOnly();
+    public Guid ClienteId { get; private set; }
+    public PedidosStatus PedidosStatus { get; private set; }
     public decimal ValorTotal { get; private set; }
 
-    public Pedido() => _pedidoItens = [];
+    protected Pedido() => _pedidoItens = [];
 
     public void AdicionarItem(PedidoItem item)
     {
@@ -20,6 +25,25 @@ public sealed class Pedido
         }
 
         _pedidoItens.Add(item);
-        ValorTotal = PedidoItens.Sum(i => i.ValorUnitario * i.Quantidade);
+        CalcularValorPedido();
+    }
+
+    public void CalcularValorPedido() => ValorTotal = PedidoItens.Sum(i => i.CalcularValor());
+
+    public void TornarRascunho() => PedidosStatus = PedidosStatus.Rascunho;
+
+    public static class PedidoFactory
+    {
+        public static Pedido NovoPedidoRascunho(Guid clienteId)
+        {
+            var pedido = new Pedido
+            {
+                ClienteId = clienteId,
+            };
+
+            pedido.TornarRascunho();
+            return pedido;
+        }
     }
 }
+
