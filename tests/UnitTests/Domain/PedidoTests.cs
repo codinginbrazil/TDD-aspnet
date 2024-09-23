@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using FluentAssertions;
 
 namespace UnitTests.Domain;
 
@@ -14,9 +15,9 @@ public class PedidoTests
 
         // Act
         pedido.AdicionarItem(pedidoItem);
-        
+
         // Assert
-        Assert.Equal(expected: 200, actual: pedido.ValorTotal);
+        pedido.ValorTotal.Should().Be(200);
     }
 
     [Fact(DisplayName = "Adicionar Item Pedido Existente")]
@@ -35,8 +36,8 @@ public class PedidoTests
         pedido.AdicionarItem(pedidoItem2);
 
         //Assert
-        Assert.Equal(expected: 300, actual: pedido.ValorTotal);
-        Assert.Equal(expected: 1, actual: pedido.PedidoItens.Count);
-        Assert.Equal(expected: 3, actual: pedido.PedidoItens.FirstOrDefault(x => x.Id == produtoId).Quantidade);
+        pedido.ValorTotal.Should().Be(300);
+        pedido.PedidoItens.Count.Should().Be(1);
+        pedido.PedidoItens.FirstOrDefault(x => x.Id == produtoId).Quantidade.Should().Be(3);
     }
 }
