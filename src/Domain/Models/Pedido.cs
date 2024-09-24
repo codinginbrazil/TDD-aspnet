@@ -5,6 +5,7 @@ namespace Domain.Models;
 
 public sealed class Pedido
 {
+    public static int MIN_UNIDADES_ITEM => 1;
     public static int MAX_UNIDADES_ITEM => 15;
 
     private readonly List<PedidoItem> _pedidoItens;
@@ -21,7 +22,10 @@ public sealed class Pedido
         if (item.Quantidade > MAX_UNIDADES_ITEM)
             throw new DomainException($"Máximo de {MAX_UNIDADES_ITEM} unidades por produto");
 
-        if(_pedidoItens.Any(p => p.Id == item.Id))
+        if (item.Quantidade < MIN_UNIDADES_ITEM)
+            throw new DomainException($"Mínimo de {MIN_UNIDADES_ITEM} unidades por produto");
+
+        if (_pedidoItens.Any(p => p.Id == item.Id))
         {
             var itemExistente = _pedidoItens.FirstOrDefault(p => p.Id == item.Id);
             itemExistente!.AdicionarUnidades(item.Quantidade);
