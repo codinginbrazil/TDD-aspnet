@@ -1,4 +1,4 @@
-﻿namespace Domain.Statics;
+﻿namespace Domain.Statics.Enums;
 
 public enum PedidosStatus
 {

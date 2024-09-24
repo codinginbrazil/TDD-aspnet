@@ -1,11 +1,14 @@
-﻿using Domain.Statics;
+﻿using Domain.Statics.Enums;
+using Domain.Statics.Exceptions;
 
 namespace Domain.Models;
 
 public sealed class Pedido
 {
     private readonly List<PedidoItem> _pedidoItens;
-    
+
+    public int MAX_UNIDADES_ITEM => 15;
+
     public IReadOnlyCollection<PedidoItem> PedidoItens => _pedidoItens.AsReadOnly();
     public Guid ClienteId { get; private set; }
     public PedidosStatus PedidosStatus { get; private set; }
@@ -15,6 +18,9 @@ public sealed class Pedido
 
     public void AdicionarItem(PedidoItem item)
     {
+        if (item.Quantidade > MAX_UNIDADES_ITEM)
+            throw new DomainException($"Máximo de {MAX_UNIDADES_ITEM} unidades por produto");
+
         if(_pedidoItens.Any(p => p.Id == item.Id))
         {
             var itemExistente = _pedidoItens.FirstOrDefault(p => p.Id == item.Id);

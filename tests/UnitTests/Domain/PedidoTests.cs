@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Statics.Exceptions;
 using FluentAssertions;
 
 namespace UnitTests.Domain;
@@ -39,5 +40,20 @@ public class PedidoTests
         pedido.ValorTotal.Should().Be(300);
         pedido.PedidoItens.Count.Should().Be(1);
         pedido.PedidoItens.FirstOrDefault(x => x.Id == produtoId).Quantidade.Should().Be(3);
+    }
+
+    [Fact(DisplayName = "Adicionar Item Pedido Acima de 15")]
+    [Trait("Categoria", "Pedido Tests")]
+    public void AdicionarItemPedido_ItemAcimaDe15Unidades_DeveRetornarException()
+    {
+        // Arrange
+        var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(clienteId: Guid.NewGuid());
+        var produtoId = Guid.NewGuid();
+        var pedidoItem = new PedidoItem(produtoId, nome: "Produto Teste", quantidade: 16, valorUnitario: 100);
+
+        // Act
+
+        //Assert
+        Assert.Throws<DomainException>(() => pedido.AdicionarItem(pedidoItem));
     }
 }
