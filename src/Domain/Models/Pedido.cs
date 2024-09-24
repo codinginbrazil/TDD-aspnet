@@ -5,9 +5,9 @@ namespace Domain.Models;
 
 public sealed class Pedido
 {
-    private readonly List<PedidoItem> _pedidoItens;
+    public static int MAX_UNIDADES_ITEM => 15;
 
-    public int MAX_UNIDADES_ITEM => 15;
+    private readonly List<PedidoItem> _pedidoItens;
 
     public IReadOnlyCollection<PedidoItem> PedidoItens => _pedidoItens.AsReadOnly();
     public Guid ClienteId { get; private set; }

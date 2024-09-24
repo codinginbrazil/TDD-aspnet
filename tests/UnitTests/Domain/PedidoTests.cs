@@ -42,18 +42,18 @@ public class PedidoTests
         pedido.PedidoItens.FirstOrDefault(x => x.Id == produtoId).Quantidade.Should().Be(3);
     }
 
-    [Fact(DisplayName = "Adicionar Item Pedido Acima de 15")]
+    [Fact(DisplayName = "Adicionar Item Pedido Acima do permitido")]
     [Trait("Categoria", "Pedido Tests")]
-    public void AdicionarItemPedido_ItemAcimaDe15Unidades_DeveRetornarException()
+    public void AdicionarItemPedido_UnidadesItemAcimaDoPermitido_DeveRetornarException()
     {
         // Arrange
         var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(clienteId: Guid.NewGuid());
         var produtoId = Guid.NewGuid();
-        var pedidoItem = new PedidoItem(produtoId, nome: "Produto Teste", quantidade: 16, valorUnitario: 100);
+        var pedidoItem = new PedidoItem(produtoId, nome: "Produto Teste", quantidade: Pedido.MAX_UNIDADES_ITEM + 1, valorUnitario: 100);
 
         // Act
 
         //Assert
-        Assert.Throws<DomainException>(() => pedido.AdicionarItem(pedidoItem));
+        pedido.Invoking(p => p.AdicionarItem(pedidoItem)).Should().Throw<DomainException>();
     }
 }
